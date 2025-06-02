@@ -6,7 +6,7 @@ import { useChat } from '../contexts/ChatContext'
 
 const Settings = () => {
   const { settings, updateSettings } = useSettings()
-  const { clearChat } = useChat()
+  const { clearChat, userApiKey, updateApiKey } = useChat()
   const [showClearConfirm, setShowClearConfirm] = useState(false)
   
   const handleToggle = (setting) => {
@@ -20,6 +20,10 @@ const Settings = () => {
   const handleClearChat = () => {
     clearChat()
     setShowClearConfirm(false)
+  }
+  
+  const handleApiKeyChange = (e) => {
+    updateApiKey(e.target.value)
   }
   
   const avatarStyles = [
@@ -152,6 +156,26 @@ const Settings = () => {
                 <FiTrash2 className="w-6 h-6" />
               </button>
             )}
+          </div>
+        </div>
+        
+        <div className="bg-gray-800 rounded-lg p-6 mb-6">
+          <h2 className="text-xl font-semibold mb-4 text-white">API Configuration</h2>
+          <div className="mb-4">
+            <label htmlFor="apiKey" className="block text-sm font-medium text-gray-300 mb-2">
+              OpenAI API Key
+            </label>
+            <input
+              type="password"
+              id="apiKey"
+              value={userApiKey}
+              onChange={handleApiKeyChange}
+              className="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-md text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+              placeholder="Enter your OpenAI API key"
+            />
+            <p className="mt-2 text-sm text-gray-400">
+              Your API key is stored locally and never sent to our servers.
+            </p>
           </div>
         </div>
         

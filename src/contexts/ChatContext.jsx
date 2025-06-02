@@ -8,14 +8,22 @@ export function ChatProvider({ children }) {
   const [messages, setMessages] = useState([])
   const [mode, setMode] = useState('normal')
   const [error, setError] = useState(null)
+  const [userApiKey, setUserApiKey] = useState(import.meta.env.VITE_OPENAI_API_KEY || '')
   const { sendNotification } = useSettings()
   
   const openaiRef = useRef(null)
-  if (!openaiRef.current) {
+  
+  const updateApiKey = useCallback((newKey) => {
+    setUserApiKey(newKey)
     openaiRef.current = new OpenAI({
-      apiKey: import.meta.env.VITE_OPENAI_API_KEY,
+      apiKey: newKey,
       dangerouslyAllowBrowser: true
     })
+  }, [])
+
+  // Initialize OpenAI client if we have an API key
+  if (!openaiRef.current && userApiKey) {
+    updateApiKey(userApiKey)
   }
   
   const messagesRef = useRef(messages)
@@ -67,9 +75,13 @@ Remember to:
   }, [])
 
   const sendMessage = useCallback(async (text) => {
-    if (!import.meta.env.VITE_OPENAI_API_KEY) {
-      setError("OpenAI API key is missing. Please add it to your .env file.")
+    if (!userApiKey) {
+      setError("OpenAI API key is required. Please enter your API key in the settings.")
       return
+    }
+
+    if (!openaiRef.current) {
+      updateApiKey(userApiKey)
     }
 
     const userMessage = {
@@ -112,7 +124,7 @@ Remember to:
       console.error('Error getting AI response:', error)
       setError("Failed to get response from OpenAI. Please check your API key.")
     }
-  }, [mode, getModePrompt, sendNotification])
+  }, [mode, getModePrompt, sendNotification, userApiKey, updateApiKey])
 
   const clearChat = useCallback(() => {
     setMessages([])
@@ -124,8 +136,10 @@ Remember to:
     mode,
     setMode,
     error,
-    clearChat
-  }), [messages, sendMessage, mode, error, clearChat])
+    clearChat,
+    userApiKey,
+    updateApiKey
+  }), [messages, sendMessage, mode, error, clearChat, userApiKey, updateApiKey])
   
   return <ChatContext.Provider value={value}>{children}</ChatContext.Provider>
 }
