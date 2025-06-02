@@ -5,12 +5,6 @@
 [build.environment]
   NODE_VERSION = "18"
 
-[[plugins]]
-package = "@netlify/plugin-lighthouse"
-
-[[plugins]]
-package = "netlify-plugin-submit-sitemap"
-
 [[redirects]]
   from = "/*"
   to = "/index.html"
@@ -27,7 +21,7 @@ package = "netlify-plugin-submit-sitemap"
 [build.processing.images]
   compress = true
 
-# Enable brotli compression
+# Enable brotli compression and security headers
 [[headers]]
   for = "/*"
   [headers.values]
