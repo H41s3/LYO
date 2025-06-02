@@ -1,0 +1,73 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html, body {
+  min-height: 100vh;
+  overflow-x: hidden;
+  background-color: #121a29;
+  color: #ffffff;
+}
+
+@layer base {
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-display;
+  }
+  
+  body {
+    @apply font-body text-base antialiased;
+  }
+}
+
+@layer components {
+  .glow-text {
+    @apply text-neon-cyan;
+    text-shadow: 0 0 8px rgba(0, 229, 255, 0.6);
+  }
+  
+  .glow-text-pink {
+    @apply text-neon-pink;
+    text-shadow: 0 0 8px rgba(255, 56, 152, 0.6);
+  }
+  
+  .glass-panel {
+    @apply bg-glass-medium backdrop-blur-md rounded-xl border border-glass-light;
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+  }
+  
+  .neon-button {
+    @apply px-6 py-2 rounded-full font-display uppercase tracking-wider text-sm transition-all duration-300 ease-in-out;
+  }
+  
+  .neon-button-cyan {
+    @apply neon-button bg-transparent text-neon-cyan border border-neon-cyan shadow-neon-cyan hover:bg-neon-cyan/10;
+  }
+  
+  .neon-button-pink {
+    @apply neon-button bg-transparent text-neon-pink border border-neon-pink shadow-neon-pink hover:bg-neon-pink/10;
+  }
+  
+  .mode-button {
+    @apply px-4 py-1.5 rounded-full text-xs font-medium transition-all duration-200;
+  }
+  
+  .chat-bubble {
+    @apply p-4 rounded-2xl max-w-[85%] mb-4 glass-panel;
+  }
+  
+  .chat-bubble-user {
+    @apply chat-bubble ml-auto border-neon-pink/30 bg-glass-dark;
+  }
+  
+  .chat-bubble-lyo {
+    @apply chat-bubble mr-auto border-neon-cyan/30;
+  }
+  
+  .memory-card {
+    @apply glass-panel p-4 m-2 max-w-xs transform transition-all duration-300 hover:-translate-y-1;
+  }
+  
+  .settings-option {
+    @apply flex justify-between items-center p-4 border-b border-glass-light;
+  }
+}
