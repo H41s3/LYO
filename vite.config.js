@@ -4,5 +4,19 @@ import react from '@vitejs/plugin-react'
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [react()],
-  base: '/LYO/'
+  base: '/',
+  build: {
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          vendor: ['react', 'react-dom', 'react-router-dom'],
+          ui: ['@headlessui/react', 'framer-motion'],
+          three: ['three', '@react-three/fiber', '@react-three/drei']
+        }
+      }
+    }
+  },
+  define: {
+    'import.meta.env.VITE_OPENAI_API_KEY': JSON.stringify('')
+  }
 })

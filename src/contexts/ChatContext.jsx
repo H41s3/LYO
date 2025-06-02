@@ -8,22 +8,14 @@ export function ChatProvider({ children }) {
   const [messages, setMessages] = useState([])
   const [mode, setMode] = useState('normal')
   const [error, setError] = useState(null)
-  const [userApiKey, setUserApiKey] = useState(import.meta.env.VITE_OPENAI_API_KEY || '')
   const { sendNotification } = useSettings()
   
   const openaiRef = useRef(null)
-  
-  const updateApiKey = useCallback((newKey) => {
-    setUserApiKey(newKey)
+  if (!openaiRef.current) {
     openaiRef.current = new OpenAI({
-      apiKey: newKey,
+      apiKey: import.meta.env.VITE_OPENAI_API_KEY,
       dangerouslyAllowBrowser: true
     })
-  }, [])
-
-  // Initialize OpenAI client if we have an API key
-  if (!openaiRef.current && userApiKey) {
-    updateApiKey(userApiKey)
   }
   
   const messagesRef = useRef(messages)
@@ -75,15 +67,6 @@ Remember to:
   }, [])
 
   const sendMessage = useCallback(async (text) => {
-    if (!userApiKey) {
-      setError("OpenAI API key is required. Please enter your API key in the settings.")
-      return
-    }
-
-    if (!openaiRef.current) {
-      updateApiKey(userApiKey)
-    }
-
     const userMessage = {
       id: Date.now(),
       sender: 'user',
@@ -122,9 +105,9 @@ Remember to:
       setError(null)
     } catch (error) {
       console.error('Error getting AI response:', error)
-      setError("Failed to get response from OpenAI. Please check your API key.")
+      setError("Failed to get response from OpenAI. Please try again.")
     }
-  }, [mode, getModePrompt, sendNotification, userApiKey, updateApiKey])
+  }, [mode, getModePrompt, sendNotification])
 
   const clearChat = useCallback(() => {
     setMessages([])
@@ -136,10 +119,8 @@ Remember to:
     mode,
     setMode,
     error,
-    clearChat,
-    userApiKey,
-    updateApiKey
-  }), [messages, sendMessage, mode, error, clearChat, userApiKey, updateApiKey])
+    clearChat
+  }), [messages, sendMessage, mode, error, clearChat])
   
   return <ChatContext.Provider value={value}>{children}</ChatContext.Provider>
 }
